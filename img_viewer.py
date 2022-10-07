@@ -47,7 +47,8 @@ list_processing = [
         sg.Button("Image Negative", size=(20, 1), key="ImgNegative"), 
     ], 
     [ 
-        sg.Button("Image Rotate", size=(20, 1), key="ImgRotate"), 
+        sg.Button("Image Rotate", size=(20, 1), key="ImgRotate"),
+        sg.Button("Image Rotate 180", size=(20, 1), key="ImgRotate180"), 
     ], 
     [
         sg.Slider(range=(-255,255), orientation="h", size=(19,20), key="sliderBrigness", default_value=0),
@@ -65,6 +66,29 @@ list_processing = [
     [
         sg.Button("Power Law", size=(20, 1), key="ImgPowerLaw")
     ],
+    [
+        # label for input 
+        sg.Text("Input sumbu x :"),
+        # button input constanta translasi
+        sg.In(size=(15, 1), enable_events=True, key="inputSumbuX"),
+        # button translation image
+        sg.Button("Translation Image", size=(20, 1), key="ImgTranslation")
+    ],
+    [
+        sg.Text("Input sumbu y :"),
+        # button input constanta translasi
+        sg.In(size=(15, 1), enable_events=True, key="inputSumbuY"),
+    ],
+    [
+        # button for flipping vertical 
+        sg.Button("Flip Vertical", size=(20, 1), key="ImgFlipVertical"),
+        sg.Button("Flip Horizontal", size=(20, 1), key="ImgFlipHorizontal"),
+    ], 
+    [
+        # button for flipping vertical and horizontal
+        sg.Button("Flip Vertical and Horizontal", size=(20, 1), key="ImgVertikalHorozontal"),
+    ]
+
     
 ] 
 
@@ -148,14 +172,26 @@ while True:
         except: 
             pass
     elif event == "ImgRotate": 
- 
+
         try: 
             window["ImgProcessingType"].update("Image Rotate") 
-            img_output=ImgRotate(img_input,coldepth,90,"C") 
+            img_output=ImgRotate(img_input,coldepth,"C") 
             img_output.save(filename_out) 
             window["ImgOutputViewer"].update(filename=filename_out) 
         except: 
             pass
+
+    elif event == "ImgRotate180": 
+
+        try: 
+            window["ImgProcessingType"].update("Image Rotate") 
+            img_output=ImgRotatee(img_input,coldepth,"C180") 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out) 
+        except: 
+            pass
+
+
     
     elif event == "ImgChangeBrigness": 
 
@@ -197,7 +233,7 @@ while True:
     elif event == "ImgPowerLaw": 
 
         try: 
-            # value = int(values["sliderBrigness"])
+            
             window["ImgProcessingType"].update("Power Law") 
             img_output=PowerLawTransform(img_input,coldepth,10) 
             img_output.save(filename_out) 
@@ -205,7 +241,42 @@ while True:
         except: 
             pass
 
+# run the funtion translation image
+    elif event == "ImgTranslation":
+        try:
+            
+            sumbuX = int(values["inputSumbuX"])
+            sumbuY = int(values["inputSumbuY"])
+            window["ImgProcessingType"].update("Translation Image")
+            img_output=translateImageXY(img_input,coldepth,sumbuX,sumbuY)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
 
+    elif event == "ImgFlipVertical":
+        try:
+            window["ImgProcessingType"].update("Translation Image")
+            img_output=ImgFlippingVertikal(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
 
-# window.close()
+    elif event == "ImgFlipHorizontal":
+        try:
+            window["ImgProcessingType"].update("Translation Image")
+            img_output=ImgFlippingHorizontal(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
 
+    elif event == "ImgVertikalHorozontal":
+        try:
+            window["ImgProcessingType"].update("Translation Image")
+            img_output=ImgFlippingHorizontalVertical(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
