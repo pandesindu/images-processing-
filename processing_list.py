@@ -1,4 +1,5 @@
 import math
+import re
 from PIL import Image, ImageOps 
 def ImgNegative(img_input,coldepth): 
     #solusi 1 
@@ -190,51 +191,75 @@ def flipImage(imgInput, colDepth, direction):
  
     return imgOutput
 
-# funtion for image translation x axis
-def translateImageX(imgInput, colDepth, x):
-    if colDepth!=24: 
-        imgInput = imgInput.convert('RGB') 
-    imgOutput = Image.new('RGB',(imgInput.size[1],imgInput.size[0])) 
-    pixels = imgOutput.load() 
 
-    for i in range(imgOutput.size[0]):
-        for j in range(imgOutput.size[1]):
-            r, g, b = imgInput.getpixel((i, j)) 
-            if i+x < imgOutput.size[0]:
-                pixels[i,j] = (r, g, b)
+
+def ImgTranslasi(img_input,coldepth,c,sumbu):
+    print(c) 
+    
+    # print(sumbu)
+    
+    if coldepth!=25: 
+        img_input = img_input.convert('RGB') 
+        img_input_pixels = img_input.load()
+
+    img_output = Image.new('RGB',(img_input.size[1],img_input.size[0])) 
+    pixels = img_output.load() 
+
+    for i in range(img_output.size[0]): 
+        for j in range(img_output.size[1]): 
+            r, g, b = img_input.getpixel((i, j))
+            if sumbu == "x":
+                if j+c < img_output.size[0]:
+                    pixels[i,j] = img_input_pixels[i,j+c]
+                else:
+                    pixels[i,j] = (0, 0, 0)
+            elif sumbu == "y":
+                if i+c < img_output.size[0]:
+                    pixels[i,j] = img_input_pixels[i+c,j]
+                else:
+                    pixels[i,j] = (0, 0, 0)
+                
+            
+    if coldepth==1: 
+        img_output = img_output.convert("1") 
+    elif coldepth==8: 
+        img_output = img_output.convert("L") 
+    else: 
+        img_output = img_output.convert("RGB")
+        
+    return img_output
+
+# images translation function to x axis
+def ImgTranslasiX(img_input,coldepth,c):
+    # print(c) 
+    
+    if coldepth!=25: 
+        img_input = img_input.convert('RGB') 
+        img_input_pixels = img_input.load()
+
+    img_output = Image.new('RGB',(img_input.size[1],img_input.size[0])) 
+    pixels = img_output.load() 
+
+    for i in range(img_output.size[0]): 
+        for j in range(img_output.size[1]): 
+            r, g, b = img_input.getpixel((i, j))
+            if j+c < img_output.size[0]:
+                pixels[i,j] = img_input_pixels[i,j+c]
             else:
                 pixels[i,j] = (0, 0, 0)
-    if colDepth==1: 
-        imgOutput = imgOutput.convert("1") 
-    elif colDepth==8: 
-        imgOutput = imgOutput.convert("L") 
+                
+            
+    if coldepth==1: 
+        img_output = img_output.convert("1") 
+    elif coldepth==8: 
+        img_output = img_output.convert("L") 
     else: 
-        imgOutput = imgOutput.convert("RGB") 
- 
-    return imgOutput
+        img_output = img_output.convert("RGB")
+        
+    return img_output
 
-# funtion for image translation x and y axis
-def translateImageXY(imgInput, colDepth, x, y):
-    if colDepth!=24: 
-        imgInput = imgInput.convert('RGB') 
-    imgOutput = Image.new('RGB',(imgInput.size[1],imgInput.size[0])) 
-    pixels = imgOutput.load() 
 
-    for i in range(imgOutput.size[0]):
-        for j in range(imgOutput.size[1]):
-            r, g, b = imgInput.getpixel((i, j)) 
-            if i+x < imgOutput.size[0] and j+y < imgOutput.size[1]:
-                pixels[i,j] = (r, g, b)
-            else:
-                pixels[i,j] = (0, 0, 0)
-    if colDepth==1: 
-        imgOutput = imgOutput.convert("1") 
-    elif colDepth==8: 
-        imgOutput = imgOutput.convert("L") 
-    else: 
-        imgOutput = imgOutput.convert("RGB") 
 
-    return imgOutput
 
 
 # funtion for flipping images
@@ -297,6 +322,54 @@ def ImgFlippingHorizontalVertical(img_input,coldepth):
         for j in range(verticalSize):
             r, g, b = pixels[i, j]
             newPixels[horizontalSize - i - 1, verticalSize - j - 1] = (r, g, b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+    # image zoom in 
+def ImgZoomIn(img_input,coldepth, n):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize*n, verticalSize*n))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            for k in range(n):
+                for l in range(n):
+                    newPixels[i*n+k, j*n+l] = (r, g, b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+    # images zoom out
+def ImgZoomOut(img_input,coldepth, n):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize//n, verticalSize//n))
+    newPixels = img_output.load()
+    for i in range(horizontalSize//n):
+        for j in range(verticalSize//n):
+            r, g, b = pixels[i*n, j*n]
+            newPixels[i, j] = (r, g, b)
 
     if coldepth==1:
         img_output = img_output.convert("1")

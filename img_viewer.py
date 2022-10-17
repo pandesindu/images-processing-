@@ -47,7 +47,7 @@ list_processing = [
         sg.Button("Image Negative", size=(20, 1), key="ImgNegative"), 
     ], 
     [ 
-        sg.Button("Image Rotate", size=(20, 1), key="ImgRotate"),
+        sg.Button("Image Rotate 90", size=(20, 1), key="ImgRotate"),
         sg.Button("Image Rotate 180", size=(20, 1), key="ImgRotate180"), 
     ], 
     [
@@ -67,17 +67,12 @@ list_processing = [
         sg.Button("Power Law", size=(20, 1), key="ImgPowerLaw")
     ],
     [
-        # label for input 
-        sg.Text("Input sumbu x :"),
-        # button input constanta translasi
-        sg.In(size=(15, 1), enable_events=True, key="inputSumbuX"),
-        # button translation image
-        sg.Button("Translation Image", size=(20, 1), key="ImgTranslation")
-    ],
-    [
-        sg.Text("Input sumbu y :"),
-        # button input constanta translasi
-        sg.In(size=(15, 1), enable_events=True, key="inputSumbuY"),
+        # input value translation 
+        sg.Text("nilai translasi"),
+        sg.In(size=(20,10), key = "inputNilaiTranslasi"),
+        # button for translation
+        sg.Button("Translasi X", size=(20, 1), key="ImgTranslationX"),
+        sg.Button("Translasi Y", size=(20, 1), key="ImgTranslationY")
     ],
     [
         # button for flipping vertical 
@@ -87,6 +82,18 @@ list_processing = [
     [
         # button for flipping vertical and horizontal
         sg.Button("Flip Vertical and Horizontal", size=(20, 1), key="ImgVertikalHorozontal"),
+    ],
+    [
+        # slider for zoom in 
+        sg.Slider(range=(1,10), orientation="h", size=(19,20), key="sliderZoomIn", default_value=1),
+        # button for zoom in
+        sg.Button("Zoom In", size=(20, 1), key="ImgZoomIn"),
+    ],
+    [
+        # slider for zoom out
+        sg.Slider(range=(1,10), orientation="h", size=(19,20), key="sliderZoomOut", default_value=1),
+        # button for zoom out
+        sg.Button("Zoom Out", size=(20, 1), key="ImgZoomOut"),
     ]
 
     
@@ -241,14 +248,21 @@ while True:
         except: 
             pass
 
-# run the funtion translation image
-    elif event == "ImgTranslation":
+    elif event == "ImgTranslationX" :
         try:
-            
-            sumbuX = int(values["inputSumbuX"])
-            sumbuY = int(values["inputSumbuY"])
-            window["ImgProcessingType"].update("Translation Image")
-            img_output=translateImageXY(img_input,coldepth,sumbuX,sumbuY)
+            value = int(values["inputNilaiTranslasi"])
+            window["ImgProcessingType"].update("Translation")
+            img_output=ImgTranslasi(img_input,coldepth,value,"x")
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+
+    elif event == "ImgTranslationY" :
+        try:
+            value = int(values["inputNilaiTranslasi"])
+            window["ImgProcessingType"].update("Translation")
+            img_output=ImgTranslasi(img_input,coldepth,value,"y")
             img_output.save(filename_out)
             window["ImgOutputViewer"].update(filename=filename_out)
         except:
@@ -276,6 +290,26 @@ while True:
         try:
             window["ImgProcessingType"].update("Translation Image")
             img_output=ImgFlippingHorizontalVertical(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+
+    elif event == "ImgZoomIn":
+        try:
+            value = int(values["sliderZoomIn"])
+            window["ImgProcessingType"].update("Zoom In")
+            img_output=ImgZoomIn(img_input,coldepth, value)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    
+    elif event == "ImgZoomOut":
+        try:
+            value = int(values["sliderZoomOut"])
+            window["ImgProcessingType"].update("Zoom Out")
+            img_output=ImgZoomOut(img_input,coldepth, value)
             img_output.save(filename_out)
             window["ImgOutputViewer"].update(filename=filename_out)
         except:
