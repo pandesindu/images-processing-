@@ -94,6 +94,10 @@ list_processing = [
         sg.Slider(range=(1,10), orientation="h", size=(19,20), key="sliderZoomOut", default_value=1),
         # button for zoom out
         sg.Button("Zoom Out", size=(20, 1), key="ImgZoomOut"),
+    ], 
+    [
+        # button for grayscaling 
+        sg.Button("Grayscaling", size=(20, 1), key="ImgGrayscaling"),
     ]
 
     
@@ -310,6 +314,16 @@ while True:
             value = int(values["sliderZoomOut"])
             window["ImgProcessingType"].update("Zoom Out")
             img_output=ImgZoomOut(img_input,coldepth, value)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    
+    # grayscaling 
+    elif event == "ImgGrayscaling":
+        try:
+            window["ImgProcessingType"].update("Grayscale")
+            img_output=ImgFlip(img_input,coldepth)
             img_output.save(filename_out)
             window["ImgOutputViewer"].update(filename=filename_out)
         except:

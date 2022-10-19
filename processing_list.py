@@ -378,3 +378,141 @@ def ImgZoomOut(img_input,coldepth, n):
     else:
         img_output = img_output.convert("RGB")
     return img_output
+
+# funtion for grayscale image
+def ImgGrayscale(img_input,coldepth):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize, verticalSize))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            gray = (r + g + b) // 3
+            newPixels[i, j] = (gray, gray, gray)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+
+# funtion for half images is grayscale
+def ImgHalfGrayscale(img_input,coldepth):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize, verticalSize))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            if i < horizontalSize//2:
+                gray = (r + g + b) // 3
+                newPixels[i, j] = (gray, gray, gray)
+            else:
+                newPixels[i, j] = (r, g, b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+
+# funtion for diagonal images is grayscale
+def ImgDiagonalGrayscale(img_input,coldepth):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize, verticalSize))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            if i < j:
+                gray = (r + g + b) // 3
+                newPixels[i, j] = (gray, gray, gray)
+            else:
+                newPixels[i, j] = (r, g, b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+
+# funtion for half images is grayscale and half images is negative
+def ImgHalfGrayscaleNegative(img_input,coldepth):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize, verticalSize))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            if i < horizontalSize//2:
+                gray = (r + g + b) // 3
+                newPixels[i, j] = (gray, gray, gray)
+            else:
+                newPixels[i, j] = (255-r, 255-g, 255-b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
+
+# funtion for 4 images in one output 
+# 1st image is original image
+# 2nd image is flip vertical
+# 3rd image is flip horizontal
+# 4th image is flip both
+def ImgFlip(img_input,coldepth):
+    if coldepth!=24:
+        img_input = img_input.convert('RGB')
+ 
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new("RGB", (horizontalSize*2, verticalSize*2))
+    newPixels = img_output.load()
+    for i in range(horizontalSize):
+        for j in range(verticalSize):
+            r, g, b = pixels[i, j]
+            newPixels[i, j] = (r, g, b)
+            newPixels[i, verticalSize*2-1-j] = (r, g, b)
+            newPixels[horizontalSize*2-1-i, j] = (r, g, b)
+            newPixels[horizontalSize*2-1-i, verticalSize*2-1-j] = (r, g, b)
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+    return img_output
