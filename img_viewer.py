@@ -98,6 +98,33 @@ list_processing = [
     [
         # button for grayscaling 
         sg.Button("Grayscaling", size=(20, 1), key="ImgGrayscaling"),
+    ], 
+    [
+        # text UTS and underline 
+        sg.Text("UTS", font=("Helvetica", 12), text_color="black"),
+    ], 
+    [
+        # button for shape in image 
+        # button shape circle 
+        sg.Button("Shape Circle", size=(20, 1), key="ImgShapeCircle"),
+        # button shape diamond
+        sg.Button("Shape Diamond", size=(20, 1), key="ImgShapeDiamond"),
+        # button shape cross
+        sg.Button("Shape Cross", size=(20, 1), key="ImgShapeCross"),
+    ], 
+    [
+        # button 4 image flip 
+        sg.Button("Flip 4 Image", size=(20, 1), key="ImgFlip4Image"),
+        # button 4 image flip and rotate
+        sg.Button("Flip and Rotate 4 Image", size=(20, 1), key="ImgFlipRotate4Image"),
+    ], 
+    [
+        # button blend 
+        sg.Button("Blend dif size", size=(20, 1), key="ImgBlendImage"),
+        # button blend and rotate
+        sg.Button("Blend and Rotate dif size", size=(20, 1), key="ImgBlendRotateImage"),
+        # button blend and rotate and flip
+        sg.Button("Blend and Flip dif size", size=(20, 1), key="ImgBlendRotateFlipImage"),
     ]
 
     
@@ -222,7 +249,7 @@ while True:
             input_image2 = Image.open(filename)
             # print(filename)
             window["ImgProcessingType"].update("Blending Images") 
-            img_output=ImagesBlending(img_input,input_image2,coldepth) 
+            img_output=BlendAPartZoomRotate3(img_input,input_image2,coldepth) 
             # print(img_output)
             img_output.save(filename_out) 
             window["ImgOutputViewer"].update(filename=filename_out)
@@ -323,8 +350,90 @@ while True:
     elif event == "ImgGrayscaling":
         try:
             window["ImgProcessingType"].update("Grayscale")
+            img_output=ImgCircleGrayscale(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+
+    elif event == "ImgShapeCircle":
+        try:
+            window["ImgProcessingType"].update("Grayscale")
+            img_output=ImgCircleGrayscale(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+
+    elif event == "ImgShapeDiamond": 
+        try: 
+            window["ImgProcessingType"].update("Grayscale") 
+            img_output=ImgDiamondGrayscale(img_input,coldepth) 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out) 
+        except: 
+            pass
+
+    elif event == "ImgShapeCross":
+        try:
+            window["ImgProcessingType"].update("Grayscale")
+            img_output=ImgDiagonalGrayscale(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass 
+
+    elif event == "ImgFlip4Image":
+        try:
+            window["ImgProcessingType"].update("Grayscale")
             img_output=ImgFlip(img_input,coldepth)
             img_output.save(filename_out)
             window["ImgOutputViewer"].update(filename=filename_out)
         except:
+            pass         
+
+    elif event == "ImgFlipRotate4Image":
+        try:
+            window["ImgProcessingType"].update("Grayscale")
+            img_output=Img4in1(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass  
+
+    elif event == "ImgBlendImage": 
+ 
+        try: 
+            filename = values['inputImage2']
+            input_image2 = Image.open(filename)
+            window["ImgProcessingType"].update("Blending Images") 
+            img_output=BlendAPart(img_input,input_image2,coldepth) 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out)
+
+        except: 
+            pass
+
+    elif event == "ImgBlendRotateImage":
+        try: 
+            filename = values['inputImage2']
+            input_image2 = Image.open(filename)
+            window["ImgProcessingType"].update("Blending Images") 
+            img_output=BlendAPartZoomRotate(img_input,input_image2,coldepth) 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out)
+
+        except: 
+            pass
+
+    elif event == "ImgBlendRotateFlipImage":
+        try: 
+            filename = values['inputImage2']
+            input_image2 = Image.open(filename)
+            window["ImgProcessingType"].update("Blending Images") 
+            img_output=BlendAPartZoomRotate3(img_input,input_image2,coldepth) 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out)
+
+        except: 
             pass
