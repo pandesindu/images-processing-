@@ -1,1 +1,1 @@
-newPixels[verticalSize*2+j-1, horizontalSize*2-i-1] = (r, g, b)
+FirstGradientFilter1
