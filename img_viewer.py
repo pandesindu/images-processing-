@@ -2,6 +2,12 @@ import PySimpleGUI as sg
 import os.path 
 from PIL import Image, ImageOps
 from  processing_list import *
+from sharpening import *
+from edgeDetector import *
+from UTS import *
+from statisticalFilter import *
+from nonStatisticalFilter import *
+from morphological import *
 # Kolom Area No 1: Area open folder and select image 
 file_list_column = [ 
     [ 
@@ -50,9 +56,9 @@ list_processing = [
         sg.Text("Rotation"), 
     ], 
     [ 
-        sg.Button("Rotate 90", size=(10, 1), key="ImgRotate"),
-        sg.Button("Rotate 180", size=(10, 1), key="ImgRotate180"),
-        sg.Button("Rotate 270", size=(10, 1), key="ImgRotate270"), 
+        # sg.Button("Rotate 90", size=(10, 1), key="ImgRotate"),
+        # sg.Button("Rotate 180", size=(10, 1), key="ImgRotate180"),
+        # sg.Button("Rotate 270", size=(10, 1), key="ImgRotate270"), 
     ], 
     [ 
         sg.Text("Change Brightness"), 
@@ -170,6 +176,16 @@ list_processing = [
         sg.Button("Weighted Average Filter", size=(20, 1), key="ImgWeightedAverageFilter"),
     ],
     [
+        # sharpening
+        sg.Text("Noice Reduction and Sharpening")
+    ], 
+    [
+        # sharpening filter\
+        # button for robert sharpening
+        sg.Button("Gaussian Filter ", size=(20, 1), key="ImgGaussianFilter"),
+        
+    ], 
+    [
         # low pass filter
         sg.Text("Low and High Pass Filter"),
     ], 
@@ -191,7 +207,30 @@ list_processing = [
         sg.Button("Sobel Filter", size=(20, 1), key="ImgSobelFilter"),
         # laplacian filter
         sg.Button("Laplacian Filter", size=(20, 1), key="ImgLaplacianFilter"),
+    ],
+    [
+        # morphological processing
+        sg.Text("Morphological Processing"),
+    ],
+    [
+        # erosion
+        sg.Button("Erosion", size=(20, 1), key="ImgErosion"),
+        # dilation
+        sg.Button("Dilation", size=(20, 1), key="ImgDilation"),
+    ], 
+    [
+        # opening
+        sg.Button("Opening", size=(20, 1), key="ImgOpening"),
+        # closing
+        sg.Button("Closing", size=(20, 1), key="ImgClosing"),
+    ],
+    [
+        # black top hat
+        sg.Button("Black Top Hat", size=(20, 1), key="ImgBlackTopHat"),
+        # white top hat
+        sg.Button("White Top Hat", size=(20, 1), key="ImgWhiteTopHat"),
     ]
+
 
 
     
@@ -653,3 +692,61 @@ while True:
         except:
             pass
     
+    elif event == "ImgGaussianFilter":
+        try:
+            window["ImgProcessingType"].update("Gaussion filter")
+            img_output=GaussianFilter(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+            
+
+    elif event == "ImgErosion":
+        try:
+            window["ImgProcessingType"].update("erosion")
+            img_output=Erosion(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    elif event == "ImgDilation":
+        try:
+            window["ImgProcessingType"].update("dilation")
+            img_output=Dilation(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    elif event == "ImgOpening":
+        try:
+            window["ImgProcessingType"].update("opening")
+            img_output=Opening(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    elif event == "ImgClosing":
+        try:
+            window["ImgProcessingType"].update("closing")
+            img_output=Closing(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    elif event == "ImgBlackTopHat":
+        try:
+            window["ImgProcessingType"].update("black top hat")
+            img_output=BlackTopHat(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
+    elif event == "ImgWhiteTopHat":
+        try:
+            window["ImgProcessingType"].update("white top hat")
+            img_output=WhiteTopHat(img_input,coldepth)
+            img_output.save(filename_out)
+            window["ImgOutputViewer"].update(filename=filename_out)
+        except:
+            pass
