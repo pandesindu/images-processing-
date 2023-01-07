@@ -1,4 +1,5 @@
 from PIL import Image
+from statisticalFilter import *
 
 # morphological operations
 # erosion
@@ -107,4 +108,63 @@ def BlackTopHat(img_input, coldepth):
 def WhiteTopHat(img_input, coldepth):
     img_output = Opening(img_input, coldepth)
     img_output = Subtraction(img_input, img_output, coldepth)
+    return img_output
+
+
+# erotion using a min filter
+def ErMinFilter(img_input, coldepth, size):
+    if coldepth == 1:
+        img_input = img_input.convert('L')
+    
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new('L', (horizontalSize, verticalSize))
+    pixels_output = img_output.load()
+
+    for i in range(size, horizontalSize - size):
+        for j in range(size, verticalSize - size):
+            min = 255
+            for k in range(-size, size + 1):
+                for l in range(-size, size + 1):
+                    if pixels[i + k, j + l] < min:
+                        min = pixels[i + k, j + l]
+            pixels_output[i, j] = min
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+
+    return img_output
+
+# erosion using a max filter 3x3
+def ErMaxFilter(img_input, coldepth, size):
+    if coldepth == 1:
+        img_input = img_input.convert('L')
+    
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new('L', (horizontalSize, verticalSize))
+    pixels_output = img_output.load()
+
+    for i in range(size, horizontalSize - size):
+        for j in range(size, verticalSize - size):
+            max = 0
+            for k in range(-size, size + 1):
+                for l in range(-size, size + 1):
+                    if pixels[i + k, j + l] > max:
+                        max = pixels[i + k, j + l]
+            pixels_output[i, j] = max
+
+    if coldepth==1:
+        img_output = img_output.convert("1")
+    elif coldepth==8:
+        img_output = img_output.convert("L")
+    else:
+        img_output = img_output.convert("RGB")
+
     return img_output

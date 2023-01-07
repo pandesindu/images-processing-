@@ -205,6 +205,59 @@ def SobelFilter(img_input, coldepth) :
         img_output = img_output.convert("RGB")
 
     return img_output
+    
+# make sobel filter return is binary image edge is black
+def SobelFilterBinary(img_input, coldepth) :
+    if coldepth != 24 :
+        img_input = img_input.convert('RGB')
+    
+    pixels = img_input.load()
+    horizontalSize = img_input.size[0]
+    verticalSize = img_input.size[1]
+    img_output = Image.new('RGB', (horizontalSize, verticalSize))
+    newPixels = img_output.load()
+
+    sx = [[-1,0,1],[-2,0,2],[-1,0,1]]
+    sy = [[-1,-2,-1],[0,0,0],[1,2,1]]
+    offset = len(sx)//2
+
+    for i in range(offset,horizontalSize-offset) :
+        for j in range(offset,verticalSize-offset) :
+            xRGB = [0,0,0]
+            yRGB = [0,0,0]
+            for k in range(len(sx)) :
+                for l in range(len(sx)) :
+                    r,g,b = pixels[i+k-offset,j+l-offset]
+                    xRGB[0] += r*sx[k][l]
+                    xRGB[1] += g*sx[k][l]
+                    xRGB[2] += b*sx[k][l]
+
+                    yRGB[0] += r*sy[k][l]
+                    yRGB[1] += g*sy[k][l]
+                    yRGB[2] += b*sy[k][l]
+
+            for k in range(len(xRGB)) :
+                xRGB[k] = abs(xRGB[k])
+                yRGB[k] = abs(yRGB[k])
+            
+            # the edge is black
+            if xRGB[0]+yRGB[0] > 0 :
+                newPixels[i,j] = (0,0,0)
+            else :
+                newPixels[i,j] = (255,255,255)
+
+            # newPixels[i,j] = (xRGB[0]+yRGB[0],xRGB[1]+yRGB[1],xRGB[2]+yRGB[2])
+
+
+            
+    if coldepth == 1 :
+        img_output = img_output.convert("1")
+    elif coldepth == 8 :
+        img_output = img_output.convert("L")
+    else :
+        img_output = img_output.convert("RGB")
+
+    return img_output
 
 # prewitt filter
 def PrewittFilter(img_input, coldepth) :
@@ -378,3 +431,4 @@ def CompassFilter(img_input, coldepth) :
         img_output = img_output.convert("RGB")
 
     return img_output
+

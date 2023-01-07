@@ -56,9 +56,9 @@ list_processing = [
         sg.Text("Rotation"), 
     ], 
     [ 
-        # sg.Button("Rotate 90", size=(10, 1), key="ImgRotate"),
-        # sg.Button("Rotate 180", size=(10, 1), key="ImgRotate180"),
-        # sg.Button("Rotate 270", size=(10, 1), key="ImgRotate270"), 
+        sg.Button("Rotate 90", size=(10, 1), key="ImgRotate"),
+        sg.Button("Rotate 180", size=(10, 1), key="ImgRotate180"),
+        sg.Button("Rotate 270", size=(10, 1), key="ImgRotate270"), 
     ], 
     [ 
         sg.Text("Change Brightness"), 
@@ -80,6 +80,7 @@ list_processing = [
         sg.Text("Tranformation"), 
     ],  
     [
+        sg.Button("Treshold", size=(15, 1), key="ImgTreshold"),
         sg.Button("Logaritmic Transform", size=(15, 1), key="ImgLogaritmicTransform"),
         sg.Button("Power Law", size=(10, 1), key="ImgPowerLaw")
     ],
@@ -307,6 +308,15 @@ while True:
         except: 
             pass
     
+    # image tresolding
+    elif event == "ImgTreshold":
+        try: 
+            window["ImgProcessingType"].update("Image Tresolding") 
+            img_output=ImgThreshold(img_input,coldepth, 127) 
+            img_output.save(filename_out) 
+            window["ImgOutputViewer"].update(filename=filename_out) 
+        except: 
+            pass
     # pointwise operation
     # image negative
     elif event == "ImgNegative": 
@@ -705,7 +715,7 @@ while True:
     elif event == "ImgErosion":
         try:
             window["ImgProcessingType"].update("erosion")
-            img_output=Erosion(img_input,coldepth)
+            img_output=ErMinFilter(img_input,coldepth,3)
             img_output.save(filename_out)
             window["ImgOutputViewer"].update(filename=filename_out)
         except:
